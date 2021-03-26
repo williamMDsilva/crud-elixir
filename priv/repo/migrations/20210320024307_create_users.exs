@@ -4,6 +4,7 @@ defmodule Concertmaster.Repo.Migrations.CreateUsers do
   def change do
     create table(:users) do
       add :name, :string
+      add :password_hash, :string
       add :email, :text
       add :role, :text
       add :whatsapp, :text

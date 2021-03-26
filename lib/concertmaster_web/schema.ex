@@ -9,6 +9,8 @@ defmodule ConcertmasterWeb.Schema do
     field :email, non_null(:string)
     field :whatsapp, non_null(:string)
     field :role, non_null(:string)
+    field :password, non_null(:string)
+    field :token, non_null(:string)
   end
 
   input_object :user_params do
@@ -16,6 +18,11 @@ defmodule ConcertmasterWeb.Schema do
     field(:email, :string)
     field(:whatsapp, :string)
     field(:role, :string)
+    field(:password, non_null(:string))
+  end
+
+  input_object :contextAuth do
+    field(:authorization, :string)
   end
 
   query do
@@ -29,6 +36,15 @@ defmodule ConcertmasterWeb.Schema do
       arg :id, non_null(:id)
       resolve &UserResolver.get_user/3
     end
+
+    @desc "login"
+    field :login, :user do
+      arg(:email, non_null(:string))
+      arg(:password, non_null(:string))
+
+      resolve &UserResolver.login/2
+    end
+
   end
 
   mutation do
@@ -38,6 +54,7 @@ defmodule ConcertmasterWeb.Schema do
       arg :email, non_null(:string)
       arg :whatsapp, non_null(:string)
       arg :role, non_null(:string)
+      arg :password, non_null(:string)
 
       resolve &UserResolver.create_user/3
     end
@@ -54,6 +71,12 @@ defmodule ConcertmasterWeb.Schema do
     field :delete_user, :user do
       arg :id, non_null(:id)
       resolve &UserResolver.delete_user/3
+    end
+
+    @desc "logOut"
+    field :sign_out, type: :user do
+      arg(:id, non_null(:id))
+      resolve(&UserResolver.logout/3)
     end
 
   end
